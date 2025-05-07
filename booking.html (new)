@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Appointment - Funky Monkey Salon</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* CSS remains the same */
+      :root {
+        --primary: #ffe066;
+        --primary-dark: #ffd60a;
+        --primary-light: #fff3bf;
+        --accent: #f8f9fa;
+        --accent-dark: #e9ecef;
+        --text: #232323;
+        --text-light: #555;
+        --text-lighter: #777;
+        --highlight: #f7b801;
+        --highlight-dark: #e0a800;
+        --header-bg: linear-gradient(90deg, #ffd60a 60%, #ffe066 100%);
+        --footer-bg: #232323;
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.12);
+        --radius: 14px;
+        --transition: all 0.3s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background: var(--accent);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* Header and Navigation */
+      header {
+        background: var(--header-bg);
+        color: var(--text);
+        box-shadow: var(--shadow);
+        padding: 1.2rem 3rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      header strong {
+        font-family: "Playfair Display", serif;
+        font-size: 2rem;
+        letter-spacing: 1px;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+      }
+
+      nav a {
+        margin: 0 1.2rem;
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 500;
+        font-size: 1.05rem;
+        transition: var(--transition);
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      nav a::after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 2px;
+        background: var(--highlight);
+        transition: width 0.3s;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+      }
+
+      nav a:hover,
+      nav a.active {
+        color: var(--highlight);
+      }
+
+      nav a:hover::after,
+      nav a.active::after {
+        width: 100%;
+      }
+
+      nav a.book-now {
+        background: var(--highlight);
+        color: var(--text);
+        padding: 0.6rem 1.5rem;
+        border-radius: var(--radius);
+        margin-left: 1.5rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: var(--transition);
+      }
+
+      nav a.book-now:hover {
+        background: var(--highlight-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      nav a.book-now::after {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      /* Page Header */
+      .page-header {
+        background: linear-gradient(
+            120deg,
+            rgba(255, 224, 102, 0.9) 60%,
+            rgba(255, 251, 231, 0.9) 100%
+          ),
+          url("https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1500&q=80")
+            no-repeat center center;
+        background-size: cover;
+        text-align: center;
+        padding: 5rem 1rem;
+        position: relative;
+      }
+
+      .page-header::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+      }
+
+      .page-header > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .page-header h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 3rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        letter-spacing: 1px;
+      }
+
+      /* Booking Section */
+      .booking-container {
+        max-width: 1100px;
+        margin: 3rem auto;
+        padding: 0 1.5rem;
+      }
+
+      .booking-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+
+      .booking-info {
+        background: #fff;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 2.5rem;
+      }
+
+      .booking-info h2 {
+        font-family: "Playfair Display", serif;
+        color: var(--highlight);
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+      }
+
+      .booking-info h2::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: var(--highlight);
+        margin-top: 0.5rem;
+      }
+
+      .booking-info p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+      }
+
+      .booking-steps {
+        margin-top: 2rem;
+      }
+
+      .step {
+        display: flex;
+        margin-bottom: 1.5rem;
+      }
+
+      .step-number {
+        width: 40px;
+        height: 40px;
+        background: var(--primary-light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        margin-right: 1rem;
+        flex-shrink: 0;
+      }
+
+      .step-text h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+        color: var(--text);
+      }
+
+      .step-text p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+        margin-bottom: 0;
+      }
+
+      .booking-form {
+        background: #fff;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 2.5rem;
+      }
+
+      .booking-form h2 {
+        font-family: "Playfair Display", serif;
+        color: var(--highlight);
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        display: inline-block;
+      }
+
+      .booking-form h2::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: var(--highlight);
+        margin-top: 0.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text);
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: "Roboto", sans-serif;
+        font-size: 1rem;
+        transition: var(--transition);
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--highlight);
+        box-shadow: 0 0 0 2px rgba(247, 184, 1, 0.2);
+      }
+
+      .submit-btn {
+        background: var(--highlight);
+        color: var(--text);
+        border: none;
+        border-radius: var(--radius);
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: block;
+        width: 100%;
+      }
+
+      .submit-btn:hover {
+        background: var(--highlight-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--footer-bg);
+        color: #fff;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 4rem 3rem 3rem;
+        gap: 2.5rem;
+        border-radius: var(--radius) var(--radius) 0 0;
+        font-size: 1.05rem;
+        position: relative;
+        margin-top: 3rem;
+      }
+
+      footer::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-dark),
+          var(--primary),
+          var(--primary-dark)
+        );
+      }
+
+      footer div {
+        flex: 1 1 220px;
+        min-width: 200px;
+      }
+
+      footer strong {
+        font-family: "Playfair Display", serif;
+        color: var(--primary);
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+        position: relative;
+      }
+
+      footer strong::after {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 2px;
+        background: var(--highlight);
+        margin-top: 0.5rem;
+      }
+
+      footer p {
+        margin-bottom: 0.7rem;
+        color: #ccc;
+      }
+
+      footer a {
+        color: #fff;
+        text-decoration: none;
+        transition: var(--transition);
+        display: inline-block;
+        padding: 0.2rem 0;
+      }
+
+      footer a:hover {
+        color: var(--highlight);
+        transform: translateX(3px);
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transition: var(--transition);
+      }
+
+      .social-links a:hover {
+        background: var(--highlight);
+        color: var(--text);
+        transform: translateY(-3px);
+      }
+
+      /* Responsive design */
+      @media (max-width: 900px) {
+        header {
+          padding: 1rem 1.5rem;
+        }
+
+        nav {
+          position: fixed;
+          top: 0;
+          right: -100%;
+          width: 70%;
+          max-width: 300px;
+          height: 100vh;
+          background: white;
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 5rem 2rem 2rem;
+          box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+          transition: var(--transition);
+          z-index: 99;
+        }
+
+        nav.active {
+          right: 0;
+        }
+
+        nav a {
+          margin: 0.8rem 0;
+          font-size: 1.2rem;
+          width: 100%;
+        }
+
+        nav a.book-now {
+          margin: 1.5rem 0 0;
+          width: 100%;
+          text-align: center;
+        }
+
+        .menu-toggle {
+          display: block;
+          z-index: 100;
+        }
+
+        .booking-grid {
+          grid-template-columns: 1fr;
+        }
+
+        footer {
+          padding: 3rem 1.5rem 2rem;
+          text-align: center;
+        }
+
+        footer strong::after {
+          margin: 0.5rem auto 0;
+        }
+
+        .social-links {
+          justify-content: center;
+        }
+      }
+
+      /* Mobile menu overlay */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        z-index: 98;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Services dropdown */
+      .services-dropdown {
+        position: relative;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 200px;
+        box-shadow: var(--shadow);
+        border-radius: var(--radius);
+        z-index: 101;
+        top: 100%;
+        left: 0;
+        padding: 0.5rem 0;
+      }
+
+      .services-dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      .dropdown-content a {
+        display: block;
+        padding: 0.7rem 1.2rem;
+        margin: 0;
+        width: 100%;
+      }
+
+      .dropdown-content a:hover {
+        background-color: var(--accent);
+      }
+
+      @media (max-width: 900px) {
+        .dropdown-content {
+          position: static;
+          box-shadow: none;
+          display: none;
+          padding-left: 1rem;
+        }
+
+        .services-dropdown.active .dropdown-content {
+          display: block;
+        }
+
+        .services-dropdown > a {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .dropdown-toggle {
+          font-size: 1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <a href="index.html" style="text-decoration: none; color: inherit"
+          ><strong>Funky Monkey Salon</strong></a
+        >
+      </div>
+      <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+      <nav>
+        <a href="index.html">Home</a>
+        <div class="services-dropdown">
+          <a href="index.html#services"
+            >Services <span class="dropdown-toggle">▼</span></a
+          >
+          <div class="dropdown-content">
+            <a href="service-cuts.html">Funky Cuts</a>
+            <a href="service-color.html">Color Magic</a>
+            <a href="service-styling.html">Styling & Treatments</a>
+          </div>
+        </div>
+        <a href="index.html#gallery">Gallery</a>
+        <a href="index.html#testimonials">Testimonials</a>
+        <a href="fmhs_contact.html">Contact</a>
+        <a href="booking.html" class="active book-now">Book Now</a>
+      </nav>
+    </header>
+
+    <div class="overlay"></div>
+
+    <section class="page-header">
+      <h1>Book Your Appointment</h1>
+      <p>Schedule your visit and get ready for a style transformation!</p>
+    </section>
+
+    <div class="booking-container">
+      <div class="booking-grid">
+        <div class="booking-info">
+          <h2>Booking Information</h2>
+          <p>
+            Ready to express your unique style? Book your appointment with our
+            expert stylists and get ready for a transformation that reflects
+            your personality.
+          </p>
+
+          <div class="booking-steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-text">
+                <h3>Choose Your Service</h3>
+                <p>
+                  Select the service you're interested in from our menu of
+                  options.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-text">
+                <h3>Pick a Date & Time</h3>
+                <p>Choose a date and time that works best for your schedule.</p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-text">
+                <h3>Fill in Your Details</h3>
+                <p>
+                  Provide your contact information so we can confirm your
+                  appointment.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-text">
+                <h3>Confirmation</h3>
+                <p>
+                  We'll send you a confirmation email with all the details of
+                  your appointment.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p style="margin-top: 2rem">
+            Need to reschedule or cancel? Please give us at least 24 hours
+            notice. You can call us at (555) 123-4567 or email us at
+            info@funkymonkeysalon.com.
+          </p>
+        </div>
+
+        <div class="booking-form">
+          <h2>Book Your Appointment</h2>
+          <!-- Added id="bookingForm" -->
+          <form id="bookingForm" action="#" method="post">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Your Email</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Your Phone</label>
+              <input type="tel" id="phone" name="phone" required />
+            </div>
+
+            <div class="form-group">
+              <label for="service">Select Service</label>
+              <select id="service" name="service" required>
+                <option value="">-- Select a Service --</option>
+                <option value="funky-cut">Funky Cut</option>
+                <option value="funky-cut-undercut">
+                  Funky Cut with Undercut
+                </option>
+                <option value="asymmetrical-cut">Asymmetrical Funky Cut</option>
+                <option value="cut-style">Funky Cut & Style</option>
+                <option value="single-color">Single Process Color</option>
+                <option value="partial-highlights">Partial Highlights</option>
+                <option value="full-highlights">Full Highlights</option>
+                <option value="balayage">Balayage/Ombre</option>
+                <option value="fashion-colors">Fashion Colors</option>
+                <option value="blowout">Blowout & Style</option>
+                <option value="special-occasion">Special Occasion Style</option>
+                <option value="deep-conditioning">
+                  Deep Conditioning Treatment
+                </option>
+                <option value="keratin">Keratin Smoothing Treatment</option>
+                <option value="scalp-treatment">Scalp Treatment</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="stylist">Preferred Stylist (Optional)</label>
+              <select id="stylist" name="stylist">
+                <option value="">No Preference</option>
+                <option value="alex">Alex</option>
+                <option value="jordan">Jordan</option>
+                <option value="taylor">Taylor</option>
+                <option value="casey">Casey</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="date">Preferred Date</label>
+              <input type="date" id="date" name="date" required />
+            </div>
+
+            <div class="form-group">
+              <label for="time">Preferred Time</label>
+              <select id="time" name="time" required>
+                <option value="">-- Select a Time --</option>
+                <option value="09:00">9:00 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="16:00">4:00 PM</option>
+                <option value="17:00">5:00 PM</option>
+                <option value="18:00">6:00 PM</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Special Requests or Notes</label>
+              <textarea id="notes" name="notes" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Book Appointment</button>
+          </form>
+          <!-- Added message area -->
+          <p id="bookingMessage" style="margin-top: 1rem; color: green"></p>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div>
+        <strong>Funky Monkey Salon</strong>
+        <p>
+          Where style meets personality. Express your unique self with cuts that
+          make a statement.
+        </p>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="Instagram">i</a>
+          <a href="#" aria-label="Twitter">t</a>
+          <a href="#" aria-label="Pinterest">p</a>
+        </div>
+      </div>
+      <div>
+        <strong>Quick Links</strong>
+        <p><a href="index.html">Home</a></p>
+        <p><a href="service-cuts.html">Funky Cuts</a></p>
+        <p><a href="service-color.html">Color Magic</a></p>
+        <p><a href="service-styling.html">Styling & Treatments</a></p>
+      </div>
+      <div>
+        <strong>Hours</strong>
+        <p>Mon - Fri: 9am - 7pm</p>
+        <p>Saturday: 9am - 6pm</p>
+        <p>Sunday: 10am - 4pm</p>
+      </div>
+      <div>
+        <strong>Contact</strong>
+        <p>123 Style Street<br />Funkytown, FT 12345</p>
+        <p>(555) 123-4567</p>
+        <p>info@funkymonkeysalon.com</p>
+        <p><a href="fmhs_contact.html">Contact Us</a></p>
+      </div>
+    </footer>
+
+    <script>
+      // --- Mobile Menu Toggle ---
+      const menuToggle = document.querySelector(".menu-toggle");
+      const nav = document.querySelector("nav");
+      const overlay = document.querySelector(".overlay");
+
+      menuToggle.addEventListener("click", () => {
+        nav.classList.toggle("active");
+        overlay.classList.toggle("active");
+        menuToggle.textContent = nav.classList.contains("active") ? "✕" : "☰";
+      });
+
+      overlay.addEventListener("click", () => {
+        nav.classList.remove("active");
+        overlay.classList.remove("active");
+        menuToggle.textContent = "☰";
+      });
+
+      const navLinks = document.querySelectorAll(
+        "nav a:not(.services-dropdown a)"
+      );
+      navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          nav.classList.remove("active");
+          overlay.classList.remove("active");
+          menuToggle.textContent = "☰";
+        });
+      });
+
+      if (window.innerWidth <= 900) {
+        const servicesDropdown = document.querySelector(
+          ".services-dropdown > a"
+        );
+        servicesDropdown.addEventListener("click", (e) => {
+          e.preventDefault();
+          document.querySelector(".services-dropdown").classList.toggle("active");
+        });
+      }
+
+      // --- Booking Form Functionality ---
+      const bookingForm = document.getElementById("bookingForm");
+      const bookingMessage = document.getElementById("bookingMessage");
+      const bookingStorageKey = "salonBookings";
+
+      // Function to seed initial data if localStorage is empty
+      function seedInitialBookings() {
+        if (!localStorage.getItem(bookingStorageKey)) {
+          const initialBookings = [
+            {
+              name: "Alice Wonderland",
+              email: "alice@example.com",
+              phone: "555-1111",
+              service: "funky-cut",
+              stylist: "alex",
+              date: "2025-05-15", // Example future date
+              time: "10:00",
+              notes: "Looking for something edgy.",
+            },
+            {
+              name: "Bob The Builder",
+              email: "bob@example.com",
+              phone: "555-2222",
+              service: "single-color",
+              stylist: "jordan",
+              date: "2025-05-16", // Example future date
+              time: "14:00",
+              notes: "Covering grey.",
+            },
+            {
+              name: "Charlie Chaplin",
+              email: "charlie@example.com",
+              phone: "555-3333",
+              service: "keratin",
+              stylist: "taylor",
+              date: "2025-05-15", // Example future date
+              time: "11:00",
+              notes: "",
+            },
+            {
+              name: "Diana Prince",
+              email: "diana@example.com",
+              phone: "555-4444",
+              service: "balayage",
+              stylist: "casey",
+              date: "2025-05-17", // Example future date
+              time: "15:00",
+              notes: "First time balayage!",
+            },
+          ];
+          try {
+            localStorage.setItem(
+              bookingStorageKey,
+              JSON.stringify(initialBookings)
+            );
+            console.log("Initial booking data seeded into localStorage.");
+          } catch (e) {
+            console.error("Error seeding data to localStorage:", e);
+          }
+        }
+      }
+
+      // Function to get existing bookings from localStorage
+      function getBookings() {
+        const storedBookings = localStorage.getItem(bookingStorageKey);
+        if (storedBookings) {
+          try {
+            const parsedBookings = JSON.parse(storedBookings);
+            // Ensure it's an array
+            return Array.isArray(parsedBookings) ? parsedBookings : [];
+          } catch (e) {
+            console.error("Error parsing bookings from localStorage:", e);
+            return []; // Return empty array if parsing fails
+          }
+        }
+        return []; // Return empty array if nothing is stored
+      }
+
+      // Function to save bookings to localStorage
+      function saveBookings(bookings) {
+        try {
+          localStorage.setItem(bookingStorageKey, JSON.stringify(bookings));
+        } catch (e) {
+          console.error("Error saving bookings to localStorage:", e);
+          bookingMessage.textContent =
+            "Error saving booking. Storage might be full.";
+          bookingMessage.style.color = "red";
+        }
+      }
+
+      // Handle form submission
+      bookingForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Clear previous messages
+        bookingMessage.textContent = "";
+
+        // Get form data
+        const formData = new FormData(bookingForm);
+        const newBooking = {};
+        formData.forEach((value, key) => {
+          newBooking[key] = value;
+        });
+
+        // Add a unique ID (timestamp for simplicity)
+        newBooking.id = Date.now();
+
+        // Get current bookings
+        const currentBookings = getBookings();
+
+        // Add the new booking
+        currentBookings.push(newBooking);
+
+        // Save updated bookings
+        saveBookings(currentBookings);
+
+        // Provide user feedback
+        bookingMessage.textContent =
+          "Appointment booked successfully! (Stored locally)";
+        bookingMessage.style.color = "green";
+
+        // Reset the form
+        bookingForm.reset();
+
+        // Optional: Log the current bookings to the console
+        console.log("Current bookings:", getBookings());
+
+        // Hide the success message after a few seconds
+        setTimeout(() => {
+          bookingMessage.textContent = "";
+        }, 5000); // Hide after 5 seconds
+      });
+
+      // Seed initial data when the page loads
+      seedInitialBookings();
+
+      // Optional: Log initial bookings on load
+      console.log("Initial bookings on load:", getBookings());
+    </script>
+  </body>
+</html>
